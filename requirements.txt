@@ -1,6 +1,6 @@
-openai-whisper==20231117
-yt-dlp==2023.12.30
-torch==2.4.1
-torchaudio==2.4.1
-numpy==1.24.4
-ffmpeg-python==0.2.0
+openai-whisper
+yt-dlp
+torch>=2.4.0
+torchaudio>=2.4.0
+numpy
+ffmpeg-python

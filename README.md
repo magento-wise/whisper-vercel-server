@@ -89,3 +89,5 @@ For issues:
 **Deployed with ❤️ on Vercel**
 
 <!-- Last updated: Sun Sep 28 21:48:10 EEST 2025 -->
+
+<!-- Updated requirements to avoid version conflicts: Sun Sep 28 21:49:32 EEST 2025 -->
