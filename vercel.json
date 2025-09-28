@@ -1,0 +1,24 @@
+{
+  "functions": {
+    "api/transcribe.py": {
+      "maxDuration": 60
+    },
+    "api/health.py": {
+      "maxDuration": 10
+    },
+    "api/models.py": {
+      "maxDuration": 5
+    }
+  },
+  "build": {
+    "env": {
+      "PYTHON_VERSION": "3.9"
+    }
+  },
+  "env": {
+    "WHISPER_MODEL": "base",
+    "MAX_AUDIO_DURATION": "300"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}
