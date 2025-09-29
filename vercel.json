@@ -1,11 +1,13 @@
 {
   "functions": {
-    "api/*.py": {
-      "runtime": "python3.9",
-      "maxDuration": 60
+    "api/transcribe.py": {
+      "maxDuration": 300
+    },
+    "api/health.py": {
+      "maxDuration": 30
+    },
+    "api/models.py": {
+      "maxDuration": 30
     }
-  },
-  "deploymentProtection": {
-    "vercelAuthentication": false
   }
 }

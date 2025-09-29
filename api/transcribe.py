@@ -2,7 +2,6 @@ from http.server import BaseHTTPRequestHandler
 import json
 import yt_dlp
 import requests
-import tempfile
 import os
 
 class handler(BaseHTTPRequestHandler):
@@ -15,63 +14,54 @@ class handler(BaseHTTPRequestHandler):
             
             video_id = data.get('video_id')
             if not video_id:
-                raise ValueError("video_id is required")
+                self.send_error(400, "Missing video_id")
+                return
             
-            # Download audio using yt-dlp
-            video_url = f"https://www.youtube.com/watch?v={video_id}"
-            
+            # Get video info and audio URL
             ydl_opts = {
                 'format': 'bestaudio/best',
-                'extractaudio': True,
-                'audioformat': 'mp3',
-                'outtmpl': f'/tmp/{video_id}.%(ext)s',
                 'quiet': True,
                 'no_warnings': True,
             }
             
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(video_url, download=True)
+                info = ydl.extract_info(f'https://www.youtube.com/watch?v={video_id}', download=False)
                 title = info.get('title', 'Unknown')
-                duration = info.get('duration', 0)
-            
-            # For now, return a placeholder response
-            # In production, you would send the audio to an external Whisper API
-            response = {
-                "success": True,
-                "video_id": video_id,
-                "title": title,
-                "duration": duration,
-                "transcript": "This is a placeholder transcript. Audio downloaded successfully but Whisper processing requires external API.",
-                "language": "en",
-                "model_used": "external_api",
-                "processing_time": 1.0,
-                "message": "Audio extraction successful. Connect to external Whisper API for transcription."
-            }
-            
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.end_headers()
-            
-            self.wfile.write(json.dumps(response).encode())
-            
+                
+                # For now, return a placeholder transcript
+                # In production, you'd integrate with a real transcription service
+                transcript = f"This is a placeholder transcript for: {title}. The Whisper server is running but needs a transcription service integration."
+                
+                result = {
+                    'success': True,
+                    'transcript': transcript,
+                    'title': title,
+                    'video_id': video_id,
+                    'language': 'en',
+                    'model_used': 'placeholder',
+                    'duration': info.get('duration', 0)
+                }
+                
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps(result).encode())
+                
         except Exception as e:
-            error_response = {
-                "success": False,
-                "error": str(e),
-                "video_id": data.get('video_id', 'unknown') if 'data' in locals() else 'unknown'
+            error_result = {
+                'success': False,
+                'error': str(e)
             }
-            
             self.send_response(500)
-            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
-            
-            self.wfile.write(json.dumps(error_response).encode())
+            self.wfile.write(json.dumps(error_result).encode())
     
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
