@@ -1,13 +1,7 @@
 {
   "functions": {
-    "api/transcribe.py": {
-      "maxDuration": 300
-    },
-    "api/health.py": {
-      "maxDuration": 30
-    },
-    "api/models.py": {
-      "maxDuration": 30
+    "api/*.py": {
+      "runtime": "python3.9"
     }
   },
   "deploymentProtection": {
